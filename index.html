@@ -8,7 +8,7 @@
 </style>
 </head>
 <body>
-<header><img src="logo.png" alt="奇美 Logo"><div><h1>XX科借了要還 <span style="font-size:15px;color:#648376;font-weight:600">v1.0</span></h1><p>公用設備借還管理｜11/10 AI 實作進階班・教學用虛構資料</p></div><div class="topright"><span id="modeBadge" class="flag off">DEMO・未串接</span><a id="cloudLink" class="cloudlink hidden" target="_blank" rel="noopener">前往雲端版 ↗</a></div></header>
+<header><img src="logo.png" alt="奇美 Logo"><div><h1>XX科借了要還 <span style="font-size:15px;color:#648376;font-weight:600">v1.0</span></h1><p>公用設備借還管理｜11/10 AI 實作進階班・教學用虛構資料</p></div><div class="topright"><span id="modeBadge" class="flag off">等待後端設定</span></div></header>
 <main class="container">
 <section class="hero"><div><h2>設備借用，一目了然。</h2><p>前台可查看與申請｜後台需驗證後才能核准與確認歸還</p></div><div class="big">📦</div></section>
 <nav class="tabs" aria-label="功能選單"><button class="tab active" data-tab="overview">1. 工作總覽</button><button class="tab" data-tab="assets">2. 設備清單</button><button class="tab" data-tab="apply">3. 申請借用</button><button class="tab" data-tab="track">4. 進度查詢</button><button class="tab" data-tab="admin">5. 管理工作檯 🔒</button><button class="tab" data-tab="learn">6. 串接說明</button></nav>
@@ -16,23 +16,18 @@
 <section id="panel-assets" class="panel"><div class="rowhead"><h3>可借用設備</h3><span class="tag">課堂虛構資料</span></div><div id="assetCards" class="cards"></div></section>
 <section id="panel-apply" class="panel"><div class="card"><h3>送出借用申請</h3><div class="notice">一般同仁不需要管理密碼。按下送出後，申請會進入「待審核」狀態。</div><form id="requestForm"><div class="formgrid"><div class="field"><label for="asset">借用設備</label><select id="asset" required></select></div><div class="field"><label for="name">申請人（請使用示範代稱）</label><input id="name" value="示範同仁 A" maxlength="24" required></div><div class="field"><label for="start">借用日期</label><input type="date" id="start" required></div><div class="field"><label for="end">預計歸還日</label><input type="date" id="end" required></div><div class="field full"><button class="btn" type="submit">送出申請，等待管理員審核</button></div></div></form></div></section>
 <section id="panel-track" class="panel"><div class="card"><div class="rowhead"><h3>借用進度查詢</h3><button class="btn secondary" onclick="loadAll()">重新讀取</button></div><div id="trackRows" class="tablewrap"></div></div></section>
-<section id="panel-admin" class="panel"><div class="card"><h3>管理工作檯 🔒</h3><div id="offlineWarn" class="notice warn">目前為 GitHub / 本機展示模式，不能執行真正的後端密碼驗證。請開啟 Apps Script 雲端版完成管理操作。</div><div id="authBox" class="adminbox"><p style="margin-top:0">管理密碼只在 Apps Script 伺服端比對，不寫在公開網頁原始碼中。</p><div class="formgrid"><div class="field"><label for="pw">教學用管理密碼</label><input id="pw" type="password" autocomplete="off" placeholder="由講師課堂提供"></div><div class="field" style="align-self:end"><button id="loginBtn" type="button" class="btn" onclick="adminLogin()">驗證並進入管理工作檯</button></div></div></div><div id="adminPanel" class="hidden"><div class="rowhead" style="margin-top:15px"><h3>管理申請</h3><span class="tag">已通過伺服端驗證（課堂測試）</span></div><div id="adminRows" class="tablewrap"></div><div style="margin-top:12px"><button class="btn ghost" onclick="adminLogout()">登出管理工作檯</button></div></div></div></section>
-<section id="panel-learn" class="panel"><div class="card"><h3>這堂課我們要串接什麼？</h3><div class="notice">GitHub Pages：展示網頁與保存程式碼 → Google 試算表：集中保存資料 → Apps Script：負責修改資料及驗證權限。</div><p><b>為了降低初學者遇到跨網域限制的風險：</b>GitHub Pages 這一份用來展示網站；完整可寫入資料的版本，使用 Apps Script HTML Service 網頁應用程式，由 <code>google.script.run</code> 呼叫後端。兩邊使用同一套介面設計。</p><p>示範版儲存在本機瀏覽器；雲端版使用試算表，不會互相同步。<b>請不要在這個示範輸入真實姓名或院內資料。</b></p><button class="btn secondary" onclick="resetLocal()">重設本機示範資料</button></div></section>
+<section id="panel-admin" class="panel"><div class="card"><h3>管理工作檯 🔒</h3><div id="offlineWarn" class="notice warn">請先完成 Apps Script 後端部署與 GitHub 的後端網址設定。</div><div id="authBox" class="adminbox"><p style="margin-top:0">管理密碼只在 Apps Script 伺服端比對，不寫在公開網頁原始碼中。</p><div class="formgrid"><div class="field"><label for="pw">教學用管理密碼</label><input id="pw" type="password" autocomplete="off" placeholder="由講師課堂提供"></div><div class="field" style="align-self:end"><button id="loginBtn" type="button" class="btn" onclick="adminLogin()">驗證並進入管理工作檯</button></div></div></div><div id="adminPanel" class="hidden"><div class="rowhead" style="margin-top:15px"><h3>管理申請</h3><span class="tag">已通過伺服端驗證（課堂測試）</span></div><div id="adminRows" class="tablewrap"></div><div style="margin-top:12px"><button class="btn ghost" onclick="adminLogout()">登出管理工作檯</button></div></div></div></section>
+<section id="panel-learn" class="panel"><div class="card"><h3>這堂課我們要串接什麼？</h3><div class="notice">GitHub Pages：正式操作入口 → Apps Script：接收操作、驗證權限 → Google 試算表：集中保存資料。</div><p><b>這次直接使用 GitHub 網址：</b>網頁留在 GitHub Pages，透過 Apps Script 的唯讀 JSONP 與 POST 表單橋接功能讀寫 Google 試算表。管理密碼只傳送到後端驗證，不寫進 GitHub 檔案。</p><p><b>課堂專用：公開網址可被其他人開啟，資料可能被任意訪客讀取；請只輸入虛構資料，勿放正式院內業務資訊或個人資料。</b></p></div></section>
 <div class="foot">© AI 實作教學示範｜非正式醫院借用管理系統・勿輸入個資</div>
 </main><div id="toast" role="status"></div>
 <script>
-// 於 GitHub Pages 部署後，可將下方改成 Apps Script 正式「網頁應用程式」網址。
-// 該網址只用來「開啟雲端版」，不把管理密碼或試算表連結放在 GitHub。
-const CLOUD_APP_URL = '';
-const IS_CLOUD = typeof google!=='undefined' && !!google.script && !!google.script.run;
-const DEMO_KEY='borrow_demo_v1';
-const initial={assets:[{id:'EQ-001',name:'公用平板 A',icon:'📱',kind:'平板',description:'課堂簡報、教學示範專用'},{id:'EQ-002',name:'投影機 B',icon:'📽️',kind:'視聽設備',description:'教室與會議活動借用'},{id:'EQ-003',name:'無線麥克風 C',icon:'🎤',kind:'視聽設備',description:'活動主持與課程用途'}],requests:[{id:'R-1001',assetId:'EQ-001',applicant:'示範同仁 B',start:'2026-11-11',end:'2026-11-12',status:'待審核',createdAt:'2026-11-08 09:00'}]};
-let data=JSON.parse(JSON.stringify(initial)), session='', demoMemory=null;
-function readDemo(){try{return JSON.parse(localStorage.getItem(DEMO_KEY)||'null')}catch(_){return demoMemory}}
-function writeDemo(){demoMemory=JSON.parse(JSON.stringify(data));try{localStorage.setItem(DEMO_KEY,JSON.stringify(data))}catch(_){}}
-function clearDemo(){demoMemory=null;try{localStorage.removeItem(DEMO_KEY)}catch(_){}}
+// 【學員只要改這一行】貼上 Apps Script 的「網頁應用程式」/exec 網址。
+// 這是後端服務位置；給使用者的網站入口仍是 GitHub Pages。
+const CLOUD_APP_URL = '請貼上你的Apps_Script_網頁應用程式_exec_網址';
+const IS_CLOUD = /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(CLOUD_APP_URL.trim());
 const $=id=>document.getElementById(id);
-function toast(message){const t=$('toast');t.textContent=message;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',3600)}
+let data={assets:[],requests:[]}, session='';
+function toast(message){const t=$('toast');t.textContent=message;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',4500)}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}
 function assetName(id){return data.assets.find(x=>x.id===id)?.name||id}
 function tag(s){const cls=s==='待審核'?'wait':s==='已歸還'?'return':s==='已拒絕'?'reject':'done';return `<span class="tag ${cls}">${escapeHtml(s)}</span>`}
@@ -41,15 +36,72 @@ function render(){const ds=data.assets,rs=data.requests; $('kDevices').textConte
 function showTab(tab){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('show',x.id==='panel-'+tab))}
 function pick(id){showTab('apply');$('asset').value=id}
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));
-function localSave(){writeDemo()}
-function cloudCall(name,...args){return new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error(e.message||String(e))))[name](...args))}
-async function loadAll(){try{if(IS_CLOUD)data=await cloudCall('getData');else data=readDemo()||JSON.parse(JSON.stringify(initial));render();toast(IS_CLOUD?'已從 Google 試算表讀取資料':'已更新本機示範資料')}catch(e){toast('讀取失敗：'+e.message)}}
-$('requestForm').addEventListener('submit',async e=>{e.preventDefault();const p={assetId:$('asset').value,applicant:$('name').value.trim(),start:$('start').value,end:$('end').value};if(p.end<p.start){toast('預計歸還日不能早於借用日');return}const b=e.submitter;b.disabled=true;try{if(IS_CLOUD){await cloudCall('submitBorrow',p);data=await cloudCall('getData')}else{data.requests.push({...p,id:'R-'+Date.now().toString().slice(-6),status:'待審核',createdAt:new Date().toLocaleString('zh-TW')});localSave()}render();showTab('track');toast('申請已送出！目前狀態：待審核')}catch(err){toast('送出失敗：'+err.message)}finally{b.disabled=false}});
-async function adminLogin(){if(!IS_CLOUD){toast('請使用 Apps Script 雲端版進行真正的後端驗證');return}const pass=$('pw').value;try{const result=await cloudCall('adminLogin',pass);session=result.token;$('pw').value='';$('authBox').classList.add('hidden');$('adminPanel').classList.remove('hidden');data=await cloudCall('getData');render();toast('後端驗證成功')}catch(e){toast('登入未通過：'+e.message)}}
-async function adminChange(id,action){if(!IS_CLOUD||!session){toast('請先登入雲端管理工作檯');return}try{await cloudCall('adminUpdate',{id,action,token:session});data=await cloudCall('getData');render();toast('更新成功，試算表已同步')}catch(e){toast('更新失敗：'+e.message)}}
-function adminLogout(){session='';$('authBox').classList.remove('hidden');$('adminPanel').classList.add('hidden');toast('已結束管理工作階段')}
-function resetLocal(){if(IS_CLOUD){toast('雲端版不提供直接重設，避免覆蓋共用資料');return}clearDemo();data=JSON.parse(JSON.stringify(initial));render();toast('已重設本機示範資料')}
-(function init(){const today='2026-11-10';$('start').value=today;$('end').value='2026-11-11';if(IS_CLOUD){$('modeBadge').className='flag';$('modeBadge').textContent='雲端版・資料同步中';$('offlineWarn').classList.add('hidden')}else if(CLOUD_APP_URL){$('cloudLink').href=CLOUD_APP_URL;$('cloudLink').classList.remove('hidden')}loadAll()})();
+
+// 公開唯讀查詢：使用 Apps Script 官方文件支援的 JSONP。
+// JSONP 回傳資料將對所有使用者公開，請勿存放敏感資料。
+function jsonp(op, extra={}) {
+  return new Promise((resolve,reject)=>{
+    const callback='__cloud_cb_'+Array.from(crypto.getRandomValues(new Uint8Array(14)),b=>b.toString(16).padStart(2,'0')).join('');
+    const script=document.createElement('script');
+    let finished=false;
+    const timer=setTimeout(()=>finish(new Error('後端讀取逾時，請確認部署網址與存取權限')),12000);
+    function finish(error,value){
+      if(finished)return;finished=true;clearTimeout(timer);script.remove();delete window[callback];
+      error?reject(error):resolve(value);
+    }
+    window[callback]=data=>finish(null,data);
+    script.onerror=()=>finish(new Error('無法載入 Apps Script 資料，請檢查網址與公開權限'));
+    const url=new URL(CLOUD_APP_URL);
+    const params=new URLSearchParams({api:'1',op,callback,...extra,_t:Date.now().toString()});
+    url.search=params.toString();script.src=url.toString();document.head.appendChild(script);
+  });
+}
+// 寫入與登入採 POST（不將密碼放在網址），用隱藏表單避開跨來源 fetch/CORS。
+// POST 後以一次性隨機票證透過唯讀查詢取得結果。
+async function cloudCall(op,payload=null){
+  if(!IS_CLOUD) throw new Error('講師尚未設定 Apps Script /exec 後端網址');
+  if(op==='getData'){
+    const answer=await jsonp('getData');
+    if(!answer.ok)throw new Error(answer.error||'讀取失敗');
+    return answer.result;
+  }
+  if(!['submitBorrow','adminLogin','adminUpdate'].includes(op))throw new Error('不支援的操作');
+  const ticket=Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join('');
+  const frame=document.createElement('iframe');frame.name='post_bridge_'+ticket;frame.style.display='none';frame.setAttribute('aria-hidden','true');
+  const form=document.createElement('form');form.method='POST';form.action=CLOUD_APP_URL;form.target=frame.name;form.style.display='none';
+  for(const [name,value] of Object.entries({op,ticket,payload:JSON.stringify(payload)})){
+    const field=document.createElement('input');field.type='hidden';field.name=name;field.value=value;form.appendChild(field);
+  }
+  document.body.append(frame,form);
+  try {
+    HTMLFormElement.prototype.submit.call(form);
+    // POST 執行期間可能較久，先等待，再每 850ms 輪詢執行結果。
+    for(let i=0;i<28;i++){
+      await new Promise(r=>setTimeout(r, i===0?1100:850));
+      try {
+        const result=await jsonp('poll',{ticket});
+        if(result.pending)continue;
+        if(result.ok)return result.result;
+        throw new Error(result.error||'後端操作失敗');
+      } catch(error){
+        // 網路暫時失敗可以重試；明確後端錯誤直接顯示給使用者。
+        if(!/無法載入|逾時/.test(error.message))throw error;
+      }
+    }
+    throw new Error('後端作業逾時，可能仍已寫入。請先重新讀取，不要直接重複提交。');
+  } finally {form.remove();frame.remove();}
+}
+async function loadAll(){try{data=await cloudCall('getData');render();$('requestForm').querySelector('[type=submit]').disabled=false;$('modeBadge').className='flag';$('modeBadge').textContent='GitHub・資料已同步';toast('已同步 Google 試算表資料')}catch(e){$('modeBadge').className='flag off';$('modeBadge').textContent='後端連線失敗';$('requestForm').querySelector('[type=submit]').disabled=true;toast('讀取失敗：'+e.message)}}
+$('requestForm').addEventListener('submit',async e=>{e.preventDefault();const p={assetId:$('asset').value,applicant:$('name').value.trim(),start:$('start').value,end:$('end').value};if(p.end<p.start){toast('預計歸還日不能早於借用日');return}const b=e.submitter;b.disabled=true;try{await cloudCall('submitBorrow',p);data=await cloudCall('getData');render();showTab('track');toast('申請已送出！狀態：待審核')}catch(err){toast('送出未確認：'+err.message)}finally{b.disabled=false}});
+async function adminLogin(){const pass=$('pw').value;try{const result=await cloudCall('adminLogin',pass);session=result.token;$('pw').value='';$('authBox').classList.add('hidden');$('adminPanel').classList.remove('hidden');data=await cloudCall('getData');render();toast('後端管理驗證成功')}catch(e){toast('登入未通過：'+e.message)}}
+async function adminChange(id,action){if(!session){toast('請先登入管理工作檯');return}try{await cloudCall('adminUpdate',{id,action,token:session});data=await cloudCall('getData');render();toast('更新成功，已同步試算表')}catch(e){toast('更新未確認：'+e.message)}}
+function adminLogout(){session='';$('authBox').classList.remove('hidden');$('adminPanel').classList.add('hidden');toast('已登出管理工作檯')}
+(function init(){
+  $('start').value='2026-11-10';$('end').value='2026-11-11';
+  render();
+  if(IS_CLOUD){$('modeBadge').className='flag';$('modeBadge').textContent='GitHub・正在同步';$('requestForm').querySelector('[type=submit]').disabled=true;$('offlineWarn').classList.add('hidden');loadAll();}
+  else {$('modeBadge').textContent='尚未設定後端';$('modeBadge').className='flag off';$('requestForm').querySelector('[type=submit]').disabled=true;toast('請先填入 Apps Script /exec 網址並上傳 GitHub');}
+})();
 </script>
 </body>
 </html>
